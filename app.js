@@ -5,7 +5,7 @@ app.use("/css", express.static("./css"));
 app.use("/js", express.static("./js"))
 
 app.get("/session", (req, res)=>{
-    res.sendFile(__dirname+"/calendar.html");
+    res.sendFile(__dirname+"/session.html");
 
 });
 
