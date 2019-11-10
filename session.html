@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+
+    
+    
+
+    <link href='css/fullcalendar.min.css' rel='stylesheet' />
+    <link href='css/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <link href='css/calendar.css' rel='stylesheet' />
+
+    <script src="js/moment.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+
+    <script src='js/calendar.js'></script>
+
+    
+  </head>
+  <body>
+    <h1 id='className'>Class Session</h1>
+    <h2 id='tutorName'>Tutor:</h2>
+    <div id='calendar'></div>
+
+    <div id="modal-wrapper" class="modal" style="display: none;">
+  
+        <div class="modal-content">
+              
+          <div class="closeContainer">
+            <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+            
+            <h1 style="text-align:center" id="Box Title" ></h1>
+          </div>
+      
+          <div class="container">
+            <span id="eventID" name="eventID" style="display: none;"></span>
+            <br/>
+            Time: <div id="time"></div>
+            <br/>
+          </div>
+  
+          <input id="accept" type="submit" value="Accept" onclick="processForm()"/>
+          
+        </div>
+        
+      </div>
+    
+
+  </body>
+</html>
