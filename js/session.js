@@ -1,11 +1,13 @@
 var e;
-var query = parseQuery(location.search);
-setTimeout(function(){
-  document.getElementById("className").innerHTML= query.class + " Session";
-  document.getElementById("tutorName").innerHTML= "Tutor: "+query.tutor;
+if(location.search > 1){
+  var query = parseQuery(location.search);
+  setTimeout(function(){
+    document.getElementById("className").innerHTML= query.class + " Session";
+    document.getElementById("tutorName").innerHTML= "Tutor: "+query.tutor;
 
-}, 1000);
-console.log(query);
+  }, 1000);
+  console.log(query);
+}
 
 $(function() {
 
