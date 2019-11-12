@@ -20,7 +20,7 @@ app.get("/create_account", (req, res)=>{
 });
 
 app.get("/create_account_redirect", (req, res)=>{
-    res.sendFile(__dirname + '/create_account_redirect.html');
+    res.sendFile(__dirname + "/create_account_redirect.html");
 });
 
 app.listen(3000);
