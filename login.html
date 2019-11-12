@@ -13,15 +13,15 @@
                 <input type = "text" name="username" class = "info" required><br>
                 <label class = "info" >Password:</label>
                 <input type = "password" name="password" class = "info" required><br>
-                <input type = "submit" id = "submit" onclick="check(this.form)">
+                <input type="button" value="Login" onClick="check(this.form)">
             </form>
             <script language="javascript">
                 function check(form){
                     if(form.username.value == "admin" && form.password.value == "password"){
-                        window.open('session.html')
+                        location="search.html";
                     }
                     else{
-                        alert("Invalid Login Information")
+                        alert("Invalid Login Information");
                     }
                 }
             </script>
