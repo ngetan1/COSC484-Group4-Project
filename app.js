@@ -14,4 +14,9 @@ app.get("/login", (req, res)=>{
     res.sendFile(__dirname+"/login.html");
 
 });
+
+app.get("/search", (req, res)=>{
+    res.sendFile(__dirname+"/pos");
+
+});
 app.listen(3000);
