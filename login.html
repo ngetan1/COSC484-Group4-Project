@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <meta charset = 'urf-8'>
@@ -10,7 +11,7 @@
                     return true;
                 }
                 else{
-                    alert("Passwords must match");
+                    alert("Invalid Credentials");
                     return false;
                 }
             }
@@ -20,7 +21,7 @@
         <div id = "login">
            <img src = "img/logo.png" id = "logo"/>
            
-            <form name="loginForm" action="search.html" onsubmit="return check()" method="post">
+            <form name="loginForm" action="/search" onsubmit="return check()" method="GET">
                 <h3>Sign In</h3>
                 <label class = "info" >Username:</label>
                 <input type = "text" name="username" class = "info" required><br>
@@ -29,7 +30,7 @@
                 <input type="submit" value="Submit" id="submit">
             </form>
             <label class = "newAcc">Do not have an account?</label>
-            <a href = "createAccount.html">Register Here</a>
+            <a href = "/createAccount">Register Here</a>
             
         </div>
     </body>

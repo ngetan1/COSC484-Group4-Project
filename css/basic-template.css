@@ -1,0 +1,156 @@
+#top {
+   
+   text-align:right;
+   font-weight: bold;
+   padding: 15px;
+   
+}
+
+#ul_top li{
+    display: inline;
+    
+    list-style-type: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+}
+
+body{
+    background-image: url("../img/burdick.jpg");
+    padding: 0;
+    background: blur;
+     margin:0;
+     background-size: 100% ;
+}
+
+nav{
+    top:0;
+    right:0;
+    
+}
+
+#formcontainer input[type=submit]{
+    border-radius:5px;
+    height: 45px;
+    width:200px;
+    margin-left:30%;
+    background-color:black;
+}
+
+.info{
+    margin-left:15px;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    
+    
+    
+}
+
+#formcontainer h3{
+    text-align: center;
+    font-weight: bold;
+}
+
+#formcontainer {
+    left:30%;
+    margin: auto;
+    width: 500px;
+    margin-top:4%;
+    overflow: auto;
+    border-radius: 15px;
+    background-color:white;
+    height: 60%;
+    color: black;
+    border-color: black;
+    
+}
+
+#logo{
+    position: absolute;
+    top:0; 
+    left:0;
+    height: 60px;
+    padding-bottom: 50px;;
+    
+}
+
+#formcontainer input[type=text],[type=password]{
+    border-radius:5px;
+    height: 40px;
+    width:250px;
+}
+
+
+nav li{
+    margin-left: 60px;
+    height: 100px;
+    
+}
+
+header{
+    background-color:white;
+}
+.container {
+	width: 100%;
+    margin: 0 auto;
+  
+}
+#searchbar{
+    position:absolute;
+    top:30%;
+    left:30%;
+    background-color: white;
+    width:400px;
+    padding:100px;
+    border-radius:5px;
+    display:flex;
+    justify-content: space-between;
+}
+
+#formcontainer input[type=submit]{
+    border-radius:5px;
+    height: 45px;
+    width:200px;
+    margin-left:30%;
+    background-color:white;
+    color:black;
+    margin-left: 150px;
+    border: 2px solid black;
+}
+#searchbar button[type=submit]{
+    background-color:white;
+    width: 100px;
+    position:relative;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-weight: bold;
+    border: 2px solid black;
+    border-radius:10px;
+}
+#searchbar{
+    border: 2px solid black;
+}
+#searchbar input[type=text]{
+    width: 400px;
+    padding: 15px 20px;
+    height: 60px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 30px;
+}
+
+
+
+label {
+    text-align:left;
+    width:150px;
+    display:block;
+    float:left;
+    clear:right;
+    font-size:18;
+   
+  }
+
+
