@@ -10,4 +10,8 @@ app.get("/session", (req, res)=>{
 
 });
 
+app.get("/login", (req, res)=>{
+    res.sendFile(__dirname+"/login.html");
+
+});
 app.listen(3000);
