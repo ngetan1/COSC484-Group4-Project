@@ -30,6 +30,11 @@ app.get("/createAccount", (req, res)=>{
 
 });
 
+app.get("/createAccountRedirect", (req, res)=>{
+    res.sendFile(__dirname+"/postlogin.html");
+    
+});
+
 app.get("/aboutUs", (req, res)=>{
     res.sendFile(__dirname+"/aboutus.html");
 
