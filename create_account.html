@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create Account</title>
+        <meta charset="UTF-8">
+        
+        <script>
+            function validate_password(){
+                var pw = document.forms["account_info"]["pw"].value;
+                var cpw = document.forms["account_info"]["cpw"].value;
+
+                if(pw != cpw){
+                    window.alert("Passwords do not match.");
+                    return false;
+                }
+                else{ return true; }
+            }
+        </script>
+    </head>
+    <body>
+        <p>
+            <u><b>Welcome to TUtor</b></u>
+        </p>
+        <p>Please create an acount so that you can start on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p>
+        
+        <form name="account_info" method="GET" action="create_account_redirect.html" onsubmit="return validate_password()">
+            <table>
+                    <tr>
+                        <td>First Name</td>
+                        <td><input type="text" name="fname" required></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td><input type="text" name="lname" required></td>
+                    </tr>
+                    <tr>
+                        <td>E-mail</td>
+                        <td><input type="email" name="email" required></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input type="password" name="pw" required></td>
+                    </tr>
+                    <tr>
+                        <td>Confirm Password</td>
+                        <td><input type="password" name="cpw" required></td>
+                    </tr>
+                    <tr>
+                        <td>Class</td>
+                        <td>
+                            <select name="class">
+                                <option value="c1">COSC 001 - Intro</option>
+                                <option value="c2">COSC 002 - Intro</option>
+                                <option value="c3">COSC 003 - Intro</option>
+                                <option value="c4">COSC 004 - Intro</option>
+                                <option value="c5">COSC 005 - Intro</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                
+                <input type="submit" value="Create Account">
+                
+        </form>
+            
+    </body>
+</html>
