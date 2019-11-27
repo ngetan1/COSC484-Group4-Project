@@ -1,9 +1,39 @@
 var express = require("express");
 var app = express();
+var sql = require("./js/db.js");
 
 app.use("/css", express.static("./css"));
 app.use("/js", express.static("./js"));
 app.use("/img", express.static("./img"));
+
+
+//API section
+//---------------------------------------------------------------------------------------
+
+app.get("/allAccounts", (req, res)=>{
+    const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account"
+    sql.query(qstring, (err, rows, fields) =>{
+        res.json(rows);
+    })
+    
+
+});
+
+app.get("/allAccounts/:id", (req, res)=>{
+    const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account WHERE UserId = ?"
+    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+        res.json(rows);
+    })
+    
+
+});
+
+
+
+
+
+//------------------------------------------------------------------------------------------------
+
 
 app.get("/", (req, res)=>{
     res.sendFile(__dirname+"/main.html");

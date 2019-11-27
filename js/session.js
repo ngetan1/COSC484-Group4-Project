@@ -1,4 +1,10 @@
 var e;
+
+$.get("http://localhost:3000/allAccounts", (res, err)=>{
+  console.log(res);
+  console.log(res[0].UserId);
+
+});
 if(location.search > 1){
   var query = parseQuery(location.search);
   setTimeout(function(){
