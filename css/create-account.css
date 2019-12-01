@@ -1,0 +1,53 @@
+body{
+    background-image: url("../img/burdick.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+#create-account{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: .90;
+    width: 1000px;
+    height: 700px;
+    border: 1px solid black;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    margin: none;
+    background-image: linear-gradient(white, rgb(177, 177, 177));
+}
+
+#logo{
+    position: relative;
+    margin-left: 250px;
+    height: 100px;
+    width: 500px;
+}
+
+#submit{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 6px;
+    border-width: 0px;
+}
+
+#submit:hover{
+    background-color: rgb(0, 0, 0);
+    color: rgb(190, 190, 190);
+}
+
+p, a, label{
+    position: relative;
+}
+
+form{
+    position: relative;
+    margin-bottom: 200px;
+}

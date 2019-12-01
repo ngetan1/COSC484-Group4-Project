@@ -3,7 +3,7 @@
     <head>
         <title>Create Account</title>
         <meta charset="UTF-8">
-        
+        <link rel = "stylesheet" href = "css/create-account.css"/>
         <script>
             function validate_password(){
                 var pw = document.forms["account_info"]["pw"].value;
@@ -18,13 +18,19 @@
         </script>
     </head>
     <body>
-        <p>
-            <u><b>Welcome to TUtor</b></u>
-        </p>
-        <p>Please create an acount so that you can start on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p>
-        
-        <form name="account_info" method="GET" action="/search" onsubmit="return validate_password()">
-            <table>
+        <div id="create-account">
+            <img src="img/logo.png" id="logo"/>
+            <p>
+                <u><b>Welcome to TU Tutor Connect</b></u>
+            </p>
+            <p>Please create an account so that you can get started on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p>
+            
+            <form name="account_info" method="GET" action="/createAccountRedirect" onsubmit="return validate_password()">
+                <table>
+                    <tr>
+                        <td>Towson ID</td>
+                        <td><input type="text" name="uid" required></td>
+                    </tr>
                     <tr>
                         <td>First Name</td>
                         <td><input type="text" name="fname" required></td>
@@ -39,32 +45,30 @@
                     </tr>
                     <tr>
                         <td>Password</td>
-                        <td><input type="password" name="pw" required></td>
+                        <td><input type="text" name="pw" required></td>
                     </tr>
                     <tr>
                         <td>Confirm Password</td>
-                        <td><input type="password" name="cpw" required></td>
+                        <td><input type="text" name="cpw" required></td>
                     </tr>
-                    <!--
                     <tr>
-                        <td>Class</td>
+                        <td>Are you a Teacher?</td>
                         <td>
-                            <select name="class">
-                                <option value="c1">COSC 001 - Intro</option>
-                                <option value="c2">COSC 002 - Intro</option>
-                                <option value="c3">COSC 003 - Intro</option>
-                                <option value="c4">COSC 004 - Intro</option>
-                                <option value="c5">COSC 005 - Intro</option>
+                            <select name="isteach" id="isteach" required>
+                                <option value=""></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
                             </select>
                         </td>
                     </tr>
-                    -->
                 </table>
                 <br>
                 
-                <input type="submit" value="Create Account">
+                <input type="submit" value="Create Account" id="submit">
                 
-        </form>
-            
+            </form>
+            <label>Already have an account?</label>
+            <a href="/login">Login Here</a>
+        </div>
     </body>
 </html>
