@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+
+    
+    
+
+    <link href='css/fullcalendar.min.css' rel='stylesheet' />
+    <link href='css/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <link href='css/session.css' rel='stylesheet' />
+
+    <script src="js/moment.min.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/fullcalendar.min.js"></script>
+
+    <script src='js/createSession.js'></script>
+
+    
+  </head>
+  <body>
+    <h1 id='className'>Create Session</h1>
+    
+    <div id='calendar'></div>
+
+    <div id="create-session" class="modal" style="display: none;">
+  
+        <div class="modal-content">
+              
+          <div class="closeContainer">
+            <span onclick="document.getElementById('create-session').style.display='none'" class="close" title="Close PopUp">&times;</span>
+            
+            <h1 style="text-align:center" id="Box Title" >Create Session</h1>
+          </div>
+      
+          <div class="container">
+            <form name= "myForm" method="POST" onsubmit="return processForm()">
+                
+                Enter Class Name: <input name="class" id="class" type="text" required = "required"/> <br>
+                <p id="dateErr" style="color:red"></p>
+                Enter Date: <input name="day"id = "day" type = "date" required = "required"/><br/>
+                <p id="sTimeErr" style="color:red"></p>
+                Enter Start Time: <input name="sTime" id = "sTime" type="time" required = "required"/> <br>
+                <p id="eTimeErr" style="color:red"></p>
+                Enter End Time: <input name="eTime" id = "eTime" type="time" required = "required"/> <br> 
+                Enter Place of Tutoring: <input name="place" id="place" type="text" required = "required"/> <br>
+            
+                <input id="create" type ="submit" value="Create Session" style="visibility: hidden;"/>
+                <input id ="update"  type="submit" value="Update Session" style="visibility: hidden;"/>
+            </form>
+          </div>
+  
+        
+          
+        </div>
+        
+    </div>
+
+
+    <div id="event-details" class="modal" style="display: none;">
+  
+        <div class="modal-content">
+              
+          <div class="closeContainer">
+            <span onclick="document.getElementById('event-details').style.display='none'" class="close" title="Close PopUp">&times;</span>
+            
+            <h1 style="text-align:center" id="Event Title" ></h1>
+          </div>
+      
+          <div class="container">
+            <span id="eventID" name="eventID" style="display: none;"></span>
+           <p id="showDate"></p>
+           <p id="showStartTime"></p>
+           <p id="showEndTime"></p>
+           <p id="showPlace"></p>
+           <p id="showTaken">No one</p>
+          </div>
+  
+          <input  type="submit" value="Update" onclick="editSession()"/>
+          <input  type="submit" value="Delete" onclick="deleteSession();"/>
+          
+        </div>
+        
+      </div>
+    
+
+  </body>
+</html>

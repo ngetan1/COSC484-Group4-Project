@@ -1,8 +1,8 @@
 var e;
 
-$.get("http://localhost:3000/allAccounts", (res, err)=>{
+$.get("http://localhost:3000/session/1", (res, err)=>{
   console.log(res);
-  console.log(res[0].UserId);
+  console.log(res[0].Day.substr(0, 10));
 
 });
 if(location.search > 1){
@@ -47,8 +47,8 @@ $(function() {
   });
  
   //adding events (later on adding event from database)
-  var date = new Date("2019-11-08" + 'T00:00:00');
-  $('#calendar').fullCalendar('renderEvent', {
+  var date = new Date("2019-11-08" + 'T01:00:00');
+  var g = {
     title: "COSC 484",
     start: date,
     allDay: false,
@@ -56,7 +56,9 @@ $(function() {
     extendedProps:{
       taken: false
     }
-  }, true);
+  }
+  console.log(g);
+  $('#calendar').fullCalendar('renderEvent', g, true);
 
   $('#calendar').fullCalendar('renderEvent', {
     title: "COSC 584",
