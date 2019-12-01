@@ -43,7 +43,7 @@ body{
     color: rgb(190, 190, 190);
 }
 
-p, a, label{
+p, a{
     position: relative;
 }
 
