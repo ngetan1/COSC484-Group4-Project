@@ -338,6 +338,7 @@ app.get("/createAccountRedirect", (req, res)=>{
             
             // SELECT LAST_INSERT_ID() could probably replace the line directly below //
             //res.sendFile(__dirname + "/postlogin.html");
+            /*
             sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
                 if(error) throw error;
         
@@ -348,6 +349,7 @@ app.get("/createAccountRedirect", (req, res)=>{
                 });
         
             });
+            */
         }
         if(result != ''){
             res.redirect("/re_create_account");
@@ -357,18 +359,6 @@ app.get("/createAccountRedirect", (req, res)=>{
     sql.query(sqlString, [values], function(err, result){
         if (err) throw err;
         console.log('account added');
-    });
-    */
-   /*
-    sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
-        if(error) throw error;
-
-        const user_id = results[0];
-
-        req.login(user_id, function(err) {
-            res.redirect('/search');
-        });
-
     });
     */
 });
