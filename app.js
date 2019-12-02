@@ -254,6 +254,11 @@ app.get("/login", (req, res)=>{
 
 });
 
+// app.post("/login", passport.authenticate('local', { 
+//     successRedirect: "/search",
+//     failureRedirect: "/login"
+// }));
+
 app.get("/search", (req, res)=>{
     res.sendFile(__dirname+"/postlogin.html");
 
