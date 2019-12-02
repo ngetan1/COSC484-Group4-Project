@@ -283,7 +283,7 @@ app.get("/createAccountRedirect", (req, res)=>{
 
     //enter database credentials here
     var con = mysql.createConnection({
-        host: "http://us-cdbr-iron-east-05.cleardb.net/",
+        host: "us-cdbr-iron-east-05.cleardb.net",
         user: "b4179bf089dd31",
         password: "45c8f550",
         database: "heroku_60e48b8f73ee0e3"
