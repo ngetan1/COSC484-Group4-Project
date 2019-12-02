@@ -3,7 +3,7 @@
     <head>
         <meta charset = 'urf-8'>
         <link rel = "stylesheet" href = "css/login.css"/>
-        <script language="javascript">
+        <!-- <script language="javascript">
             function check(){
                 var x = document.forms["loginForm"]["username"].value;
                 var y = document.forms["loginForm"]["password"].value;
@@ -15,13 +15,14 @@
                     return false;
                 }
             }
-        </script>
+        </script> -->
+        <!-- onsubmit="return check()" -->
     </head>
     <body>
         <div id = "login">
            <img src = "img/logo.png" id = "logo"/>
            
-            <form name="loginForm" action="/search" onsubmit="return check()" method="GET">
+            <form method="POST" action="/login">
                 <h3>Sign In</h3>
                 <label class = "info" >Username:</label>
                 <input type = "text" name="username" class = "info" required><br>
