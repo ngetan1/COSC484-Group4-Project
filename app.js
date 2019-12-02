@@ -4,6 +4,7 @@ var sql = require("./js/db.js");
 var bodyParser = require('body-parser')
 var session = require('express-session');
 var MySQLStore = require('express-mysql-session')(session);
+var mysql = require('mysql');
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var sessionStore = new MySQLStore(sql);
@@ -292,12 +293,12 @@ app.get("/createAccountRedirect", (req, res)=>{
         if (err) throw err;
         console.log("Connected");
         
-        var sql = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+        var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
         var values = [
             [uid, pw, fname, lname, email, isteach]
         ];
 
-        con.query(sql, [values], function(err, result){
+        con.query(sqlString, [values], function(err, result){
             if (err) throw err;
             console.log('account added');
         });
