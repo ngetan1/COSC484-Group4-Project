@@ -3,7 +3,11 @@ var app = express();
 var sql = require("./js/db.js");
 var bodyParser = require('body-parser')
 var session = require('express-session');
+var passport = require('passport');
 var MySQLStore = require('express-mysql-session')(session);
+var mysql = require('mysql');
+var url = require('url');
+var LocalStrategy = require('passport-local').Strategy;
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var sessionStore = new MySQLStore(sql);
@@ -11,7 +15,36 @@ var sessionStore = new MySQLStore(sql);
 app.use("/css", express.static("./css"));
 app.use("/js", express.static("./js"));
 app.use("/img", express.static("./img"));
+app.use(session({
+    secret: "al1896yb143m5v1k145ganqmw189b123b",
+    resave: false,
+    saveUninitialized: true,
+    //cookie: { secure: true }
+}))
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.use(new LocalStrategy(
+    function(username, password, done){
+        console.log('hello');
+        sql.query('SELECT UserId, password FROM users WHERE username = ?', [username], function(err, results, fields){
+            if(err) {done(err)};
+
+            if(results.length === 0){
+                done(null, false);
+            }
+
+            password.localeCompare(results[0].password.toString(), function(err, response){
+                if(response === true){
+                    return done(null, {user_id: results[0].id});
+                } else{
+                    return done(null, false);
+                }
+            });            
+        });
+    }
+));
 
 //API section
 //---------------------------------------------------------------------------------------
@@ -288,7 +321,12 @@ app.get("/login", (req, res)=>{
 
 });
 
-app.get("/search", (req, res)=>{
+app.post("/login", passport.authenticate('local', { 
+    successRedirect: "/search",
+    failureRedirect: "/login"
+}));
+
+app.get("/search", authenticationMiddleware(), (req, res)=>{
     res.sendFile(__dirname+"/postlogin.html");
 
 });
@@ -301,7 +339,6 @@ app.get("/createAccount", (req, res)=>{
 app.get("/createAccountRedirect", (req, res)=>{
     res.sendFile(__dirname+"/postlogin.html");
     
-    var parsedURL = url.parse(req.url, true);
     var fname= req.query.fname;
     var lname = req.query.lname;
     var uid = req.query.uid;
@@ -314,27 +351,26 @@ app.get("/createAccountRedirect", (req, res)=>{
     else{
         isteach = 0;
     }
+        
+    var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    var values = [
+        [uid, pw, fname, lname, email, isteach]
+    ];
 
-    var con = mysql.createConnection({
-        host: "...",
-        user: "...",
-        password: "...",
-        database: "mydb"
+    sql.query(sqlString, [values], function(err, result){
+        if (err) throw err;
+        console.log('account added');
     });
 
-    con.connect(function(err){
-        if (err) throw err;
-        console.log("Connected");
-        
-        var sql = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
-        var values = [
-            [uid, pw, fname, lname, email, isteach]
-        ];
+    sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
+        if(error) throw error;
 
-        con.query(sql, [values], function(err, result){
-            if (err) throw err;
-            console.log('account added');
+        const user_id = results[0]
+
+        req.login(user_id, function(err) {
+            res.redirect('/search');
         });
+
     });
 });
 
@@ -346,4 +382,23 @@ app.get("/account", (req, res)=>{
     res.sendFile(__dirname+"/accountdetails.html");
 
 });
+
+passport.serializeUser(function(user_id, done){
+    done(null, user_id);
+});
+
+passport.deserializeUser(function(user_id, done){
+    done(null, user_id);
+});
+
+function authenticationMiddleware(){
+    return(req, res, next) => {
+        console.log('req.session.passport.user: ${JSON.stringify(req.session.passport)}');
+
+        if(req.isAuthenticated()) return next();
+
+        res.redirect('/login');
+    }
+}
+
 app.listen(3000);

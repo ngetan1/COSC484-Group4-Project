@@ -20,6 +20,18 @@ body{
     background-image: linear-gradient(white, rgb(177, 177, 177));
 }
 
+h3{
+    border-top-style: dotted;
+    border-top-width: 1px;
+    padding-top: 20px;
+    padding-bottom: 10px;
+}
+
+td{
+    padding-bottom: 10px;
+    padding-left: 100px;
+}
+
 #logo{
     position: relative;
     margin-left: 250px;
