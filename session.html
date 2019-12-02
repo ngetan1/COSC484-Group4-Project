@@ -23,21 +23,23 @@
     <h2 id='tutorName'>Tutor:</h2>
     <div id='calendar'></div>
 
-    <div id="modal-wrapper" class="modal" style="display: none;">
+    <div id="event-details" class="modal" style="display: none;">
   
         <div class="modal-content">
               
           <div class="closeContainer">
             <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
             
-            <h1 style="text-align:center" id="Box Title" ></h1>
+            <h1 style="text-align:center" id="Event Title" ></h1>
           </div>
       
           <div class="container">
-            <span id="eventID" name="eventID" style="display: none;"></span>
-            <br/>
-            Time: <div id="time"></div>
-            <br/>
+            
+            <p id="showDate"></p>
+            <p id="showStartTime"></p>
+            <p id="showEndTime"></p>
+            <p id="showPlace"></p>
+            <p id="showTaken">No one</p>
           </div>
   
           <input id="accept" type="submit" value="Accept" onclick="processForm()"/>

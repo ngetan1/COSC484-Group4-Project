@@ -27,7 +27,7 @@ app.get("/allAccounts", (req, res)=>{
 
 });
 
-app.get("/allAccounts/:id", (req, res)=>{
+app.get("/account/:id", (req, res)=>{
     const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account WHERE UserId = ?"
     
     sql.query(qstring, [req.params.id],(err, rows, fields) =>{
@@ -37,6 +37,7 @@ app.get("/allAccounts/:id", (req, res)=>{
 
 });
 
+//Getting all session of a specific tutor created
 app.get("/tSession/:id", (req, res)=>{
     const qstring = "SELECT * FROM teacher_sessions WHERE TeacherId = ?"
     sql.query(qstring, [req.params.id],(err, rows, fields) =>{
@@ -45,7 +46,7 @@ app.get("/tSession/:id", (req, res)=>{
 
 });
 
-//Getting all session using student id
+//Getting all session that a student registered
 app.get("/studentSession/:id", (req, res)=>{
     const qstring = "SELECT * FROM student_sessions WHERE StudentId = ?"
     sql.query(qstring, [req.params.id],(err, rows, fields) =>{
@@ -63,6 +64,15 @@ app.get("/sSession/:id", (req, res)=>{
 
 });
 
+
+
+app.get("/classSession/:id", (req, res)=>{
+    const qstring = "SELECT * FROM class_sessions WHERE ClassIDs = ?"
+    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+        res.json(rows);
+    }) 
+
+});
 
 
 app.get("/cSession/:id", (req, res)=>{
@@ -83,10 +93,34 @@ app.get("/session/:id", (req, res)=>{
 
 });
 
+//Getting all session with a specific tutor and class
+app.get("/session/:id", (req, res)=>{
+    const qstring = "SELECT * FROM session WHERE SessionId = ?"
+    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+        res.json(rows);
+    }) 
+
+});
+
+app.put('/sSession/:id', (req, res)=>{
+    var q = "INSERT INTO student_sessions(StudentID,SessionNumber)  VALUES (?,?)  "
+    sql.query(q, [1, req.params.id], (err, rows, fields) => { //change
+        if (!err){
+            
+            console.log("Inserted student session")
+            res.status(200).end();
+            
+        }else
+            console.log(err);
+    })
+})
+
+
 
 app.post('/create-session', urlencodedParser, (req, res) => {
 
     var elm=req.body;
+    var c = elm.class.split("  ")
     
     // var q = "SET @Day = ?;SET @Start_Time = ?;SET @End_Time = ?;SET @PlaceOfTutoring = ?; \
     // CALL session(@Day,@Start_Time,@End_Time,@PlaceOfTutoring);";
@@ -99,7 +133,7 @@ app.post('/create-session', urlencodedParser, (req, res) => {
         
         if (!err){
             
-            sql.query(q[1], [2,rows.insertId], (err, rows, fields) => {
+            sql.query(q[1], [2,rows.insertId], (err, rows, fields) => { //change
                 if (!err){
                     console.log("Inserted teacher session")
                     
@@ -107,7 +141,7 @@ app.post('/create-session', urlencodedParser, (req, res) => {
                     console.log(err);
             })
 
-            sql.query(q[2], [rows.insertId, "COSC 484", "Web-Based Program"], (err, rows, fields) => {
+            sql.query(q[2], [rows.insertId, c[0], c[1]], (err, rows, fields) => { //change
                 if (!err){
                     console.log("Inserted class session")
                     res.redirect("/create-session")
@@ -135,7 +169,7 @@ app.post('/update-session/:id', urlencodedParser, (req, res) => {
         
         if (!err){
             
-            sql.query(q[1], ["COSC 484", "Web-Based Program",  req.params.id], (err, rows, fields) => {
+            sql.query(q[1], ["COSC 484", "Web-Based Program",  req.params.id], (err, rows, fields) => { //change
                 if (!err){
                     console.log("Updated class session")
                     res.redirect("/create-session")
@@ -152,9 +186,10 @@ app.post('/update-session/:id', urlencodedParser, (req, res) => {
 //deleting a session using session id
 app.delete('/sSession/:id', (req, res) => {
     sql.query('DELETE FROM student_sessions WHERE SessionNumber = ?', [req.params.id], (err, rows, fields) => {
-        if (!err)
+        if (!err){
             console.log("Deleted student session")
-        else
+            res.status(200).end();
+        }else
             console.log(err);
     })
 
