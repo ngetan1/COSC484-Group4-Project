@@ -8,12 +8,16 @@
             function validate_password(){
                 var pw = document.forms["account_info"]["pw"].value;
                 var cpw = document.forms["account_info"]["cpw"].value;
+                var valid = false;
 
                 if(pw != cpw){
                     window.alert("Passwords do not match.");
-                    return false;
                 }
-                else{ return true; }
+                else{ 
+                    valid = true;
+                }
+                
+                return valid;
             }
         </script>
     </head>

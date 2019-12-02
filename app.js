@@ -302,7 +302,7 @@ app.get("/createAccount", (req, res)=>{
 });
 
 app.get("/createAccountRedirect", (req, res)=>{
-    res.sendFile(__dirname+"/postlogin.html");
+    //res.sendFile(__dirname+"/postlogin.html");
     
     var fname= req.query.fname;
     var lname = req.query.lname;
@@ -317,20 +317,38 @@ app.get("/createAccountRedirect", (req, res)=>{
         isteach = 0;
     }
         
-    var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    //var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    var sqlString = "SELECT UserID FROM account WHERE UserID = ?";
     var values = [
         [uid, pw, fname, lname, email, isteach]
     ];
-
+    
+    sql.query(sqlString, uid, (err, result) => {
+        if (err) throw err;
+        if(result == ''){
+            sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+            sql.query(sqlString, [values], (error, results) => {
+                if (error) throw error;
+                console.log("Account added");
+            });
+            
+            // SELECT LAST_INSERT_ID() could probably replace the line directly below //
+            res.sendFile(__dirname + "/postlogin.html");
+        }
+        if(result != ''){
+            res.redirect("/re_create_account");
+        }
+    });
+    /*
     sql.query(sqlString, [values], function(err, result){
         if (err) throw err;
         console.log('account added');
     });
-
+    */
     sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
         if(error) throw error;
 
-        const user_id = results[0]
+        const user_id = results[0];
 
         req.login(user_id, function(err) {
             res.redirect('/search');
