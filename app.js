@@ -311,6 +311,10 @@ app.get("/createAccount", (req, res)=>{
     
 });
 
+app.get("/re_create_account", (req, res)=>{
+    res.sendFile(__dirname+"/re_create_account.html");
+    
+});
 app.get("/createAccountRedirect", (req, res)=>{
     //res.sendFile(__dirname+"/postlogin.html");
     
@@ -340,25 +344,22 @@ app.get("/createAccountRedirect", (req, res)=>{
             sql.query(sqlString, [values], (error, results) => {
                 if (error) throw error;
                 console.log("Account added");
-            });
+
+                // sql.query('SELECT UserID FROM account WHERE UserID = ?', [uid], function(error, results, fields) {
+                //     if(error) throw error;
             
-            // SELECT LAST_INSERT_ID() could probably replace the line directly below //
-            res.sendFile(__dirname + "/postlogin.html");
+                //     const user_id = results[0];
+            
+                //     req.login(user_id, function (err) {
+                //         res.redirect('/search');
+                //     });
+            
+                // });
+            });
         }
         if(result != ''){
             res.redirect("/re_create_account");
         }
-    });
-
-    sql.query('SELECT UserID FROM account WHERE UserID = ?', [uid], function(error, results, fields) {
-        if(error) throw error;
-
-        const user_id = results[0];
-
-        req.login(user_id, function (err) {
-            res.redirect('/search');
-        });
-
     });
 });
 
