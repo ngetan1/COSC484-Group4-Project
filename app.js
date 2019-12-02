@@ -3,6 +3,7 @@ var app = express();
 var sql = require("./js/db.js");
 var bodyParser = require('body-parser')
 var session = require('express-session');
+var passport = require('passport');
 var MySQLStore = require('express-mysql-session')(session);
 var mysql = require('mysql');
 
@@ -12,7 +13,15 @@ var sessionStore = new MySQLStore(sql);
 app.use("/css", express.static("./css"));
 app.use("/js", express.static("./js"));
 app.use("/img", express.static("./img"));
+app.use(session({
+    secret: "al1896yb143m5v1k145ganqmw189b123b",
+    resave: false,
+    saveUninitialized: false,
+    //cookie: { secure: true }
+}))
 
+app.use(passport.initialize());
+app.use(passport.session());
 
 //API section
 //---------------------------------------------------------------------------------------
@@ -295,6 +304,17 @@ app.get("/createAccountRedirect", (req, res)=>{
         if (err) throw err;
         console.log('account added');
     });
+
+    sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
+        if(error) throw error;
+
+        const user_id = results[0]
+
+        req.login(user_id, function(err) {
+            res.redirect('/search');
+        });
+
+    });
 });
 
 app.get("/aboutUs", (req, res)=>{
@@ -305,4 +325,13 @@ app.get("/account", (req, res)=>{
     res.sendFile(__dirname+"/accountdetails.html");
 
 });
+
+passport.serializeUser(function(user_id, done){
+    done(null, user_id);
+});
+
+passport.deserializeUser(function(user_id, done){
+    done(null, user_id);
+});
+
 app.listen(3000);
