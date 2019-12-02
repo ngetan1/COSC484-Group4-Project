@@ -6,6 +6,7 @@ var session = require('express-session');
 var passport = require('passport');
 var MySQLStore = require('express-mysql-session')(session);
 var mysql = require('mysql');
+var url = require('url');
 
 var urlencodedParser = bodyParser.urlencoded({ extended: false })
 var sessionStore = new MySQLStore(sql);
