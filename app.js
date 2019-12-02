@@ -306,7 +306,6 @@ app.get("/createAccount", (req, res)=>{
 });
 
 app.get("/createAccountRedirect", (req, res)=>{
-    //res.sendFile(__dirname+"/postlogin.html");
     
     var fname= req.query.fname;
     var lname = req.query.lname;
@@ -321,7 +320,6 @@ app.get("/createAccountRedirect", (req, res)=>{
         isteach = 0;
     }
         
-    //var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
     var sqlString = "SELECT UserID FROM account WHERE UserID = ?";
     var values = [
         [uid, pw, fname, lname, email, isteach]
@@ -355,12 +353,6 @@ app.get("/createAccountRedirect", (req, res)=>{
             res.redirect("/re_create_account");
         }
     });
-    /*
-    sql.query(sqlString, [values], function(err, result){
-        if (err) throw err;
-        console.log('account added');
-    });
-    */
 });
 
 app.get("/aboutUs", (req, res)=>{
