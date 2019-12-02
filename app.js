@@ -281,7 +281,6 @@ app.get("/createAccount", (req, res)=>{
 app.get("/createAccountRedirect", (req, res)=>{
     res.sendFile(__dirname+"/postlogin.html");
     
-    var parsedURL = url.parse(req.url, true);
     var fname= req.query.fname;
     var lname = req.query.lname;
     var uid = req.query.uid;
