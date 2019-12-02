@@ -306,6 +306,10 @@ app.get("/search", authenticationMiddleware(), (req, res) => {
 
 });
 
+app.get("/re_create_account", (req, res) => {
+    res.sendFile(__dirname + "/re_create_account.html");
+});
+
 app.get("/createAccount", (req, res)=>{
     res.sendFile(__dirname+"/create_account.html");
     
@@ -354,13 +358,31 @@ app.get("/createAccountRedirect", (req, res)=>{
                 //         res.redirect('/search');
                 //     });
             
-                // });
+            // SELECT LAST_INSERT_ID() could probably replace the line directly below //
+            res.sendFile(__dirname+"/login.html");
+            /*
+            sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
+                if(error) throw error;
+        
+                const user_id = results[0];
+        
+                req.login(user_id, function(err) {
+                    res.redirect('/search');
+                });
+        
             });
+            */
         }
         if(result != ''){
             res.redirect("/re_create_account");
         }
     });
+    /*
+    sql.query(sqlString, [values], function(err, result){
+        if (err) throw err;
+        console.log('account added');
+    });
+    */
 });
 
 app.get("/aboutUs", (req, res) => {
