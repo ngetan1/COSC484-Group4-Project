@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Create Account</title>
+        <meta charset="UTF-8">
+        <link rel = "stylesheet" href = "css/create-account.css"/>
+        <script>
+            function validate_password(){
+                var pw = document.forms["account_info"]["pw"].value;
+                var cpw = document.forms["account_info"]["cpw"].value;
+                var valid = false;
+
+                if(pw != cpw){
+                    window.alert("Passwords do not match.");
+                }
+                else{ 
+                    valid = true;
+                }
+                return valid;
+            }
+
+            function id_taken(){
+                window.alert("That User ID is already taken.");
+            }
+        </script>
+    </head>
+    <body onload="id_taken()">
+        <div id="create-account">
+            <img src="img/logo.png" id="logo"/>
+            <h3>
+                <u><b>Welcome to TU Tutor Connect</b></u>
+            </h3>
+            <p>Please create an account so that you can get started on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p>
+            
+            <form name="account_info" method="GET" action="/createAccountRedirect" onsubmit="return validate_password()">
+                <table>
+                    <tr>
+                        <td>Towson ID</td>
+                        <td><input type="text" name="uid" required></td>
+                    </tr>
+                    <tr>
+                        <td>First Name</td>
+                        <td><input type="text" name="fname" required></td>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td><input type="text" name="lname" required></td>
+                    </tr>
+                    <tr>
+                        <td>E-mail</td>
+                        <td><input type="email" name="email" required></td>
+                    </tr>
+                    <tr>
+                        <td>Password</td>
+                        <td><input type="text" name="pw" required></td>
+                    </tr>
+                    <tr>
+                        <td>Confirm Password</td>
+                        <td><input type="text" name="cpw" required></td>
+                    </tr>
+                    <tr>
+                        <td>Are you a Teacher?</td>
+                        <td>
+                            <select name="isteach" id="isteach" required>
+                                <option value=""></option>
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br>
+                
+                <input type="submit" value="Create Account" id="submit">
+                
+            </form>
+            <p>
+                Already have an account? <a href="/login">Login Here</a>
+            </p>
+            
+        </div>
+    </body>
+</html>

@@ -306,15 +306,15 @@ app.get("/search", authenticationMiddleware(), (req, res) => {
 
 });
 
-app.get("/createAccount", (req, res) => {
-    res.sendFile(__dirname + "/create_account.html");
-
+app.get("/createAccount", (req, res)=>{
+    res.sendFile(__dirname+"/create_account.html");
+    
 });
 
-app.get("/createAccountRedirect", (req, res) => {
-    res.sendFile(__dirname + "/postlogin.html");
-
-    var fname = req.query.fname;
+app.get("/createAccountRedirect", (req, res)=>{
+    //res.sendFile(__dirname+"/postlogin.html");
+    
+    var fname= req.query.fname;
     var lname = req.query.lname;
     var uid = req.query.uid;
     var email = req.query.email;
@@ -326,19 +326,32 @@ app.get("/createAccountRedirect", (req, res) => {
     else {
         isteach = 0;
     }
-
-    var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+        
+    //var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    var sqlString = "SELECT UserID FROM account WHERE UserID = ?";
     var values = [
         [uid, pw, fname, lname, email, isteach]
     ];
-
-    sql.query(sqlString, [values], function (err, result) {
+    
+    sql.query(sqlString, uid, (err, result) => {
         if (err) throw err;
-        console.log('account added');
+        if(result == ''){
+            sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+            sql.query(sqlString, [values], (error, results) => {
+                if (error) throw error;
+                console.log("Account added");
+            });
+            
+            // SELECT LAST_INSERT_ID() could probably replace the line directly below //
+            res.sendFile(__dirname + "/postlogin.html");
+        }
+        if(result != ''){
+            res.redirect("/re_create_account");
+        }
     });
 
-    sql.query('SELECT UserID FROM account WHERE UserID = ?', [uid], function (error, results, fields) {
-        if (error) throw error;
+    sql.query('SELECT UserID FROM account WHERE UserID = ?', [uid], function(error, results, fields) {
+        if(error) throw error;
 
         const user_id = results[0];
 
