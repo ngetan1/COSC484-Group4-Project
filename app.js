@@ -285,28 +285,15 @@ app.get("/createAccountRedirect", (req, res)=>{
     else{
         isteach = 0;
     }
-
-    //enter database credentials here
-    var con = mysql.createConnection({
-        host: "us-cdbr-iron-east-05.cleardb.net",
-        user: "b4179bf089dd31",
-        password: "45c8f550",
-        database: "heroku_60e48b8f73ee0e3"
-    });
-
-    con.connect(function(err){
-        if (err) throw err;
-        console.log("Connected");
         
-        var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
-        var values = [
-            [uid, pw, fname, lname, email, isteach]
-        ];
+    var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    var values = [
+        [uid, pw, fname, lname, email, isteach]
+    ];
 
-        con.query(sqlString, [values], function(err, result){
-            if (err) throw err;
-            console.log('account added');
-        });
+    sql.query(sqlString, [values], function(err, result){
+        if (err) throw err;
+        console.log('account added');
     });
 });
 
