@@ -3,6 +3,7 @@ var tutorName;
 var classId
 var query;
 
+
 console.log(location.search);
 //if(location.search.length > 1){
    //query = parseQuery(location.search);
@@ -15,15 +16,18 @@ console.log(location.search);
     console.log(res)
     
       document.getElementById("className").innerHTML= query.class + " Session";
-      tutorName = res[0].Fname + " " + res[0].Lname;
+      tutorName = res[0].FName + " " + res[0].LName;
       console.log(tutorName)
       document.getElementById("tutorName").innerHTML= "Tutor: "+tutorName;
       console.log(res[0].IsTeacher)
-      if(res[0].IsTeacher == "1"){
-        console.log("visible")
-        document.getElementById("createSession").style.visibility="visible"
-      }
+  
     
+  })
+
+  $.get("/isTeacher", (res, err)=>{
+    if(res.tutor == 1){
+        document.getElementById("createSession").style.visibility="visible"
+    }
   })
   
 
@@ -64,86 +68,275 @@ $(function() {
   });
  
   //adding events (later on adding event from database)
-  var event = {
-    id: '',
-    title: '',
-    start: '',
-    allDay: false,
-    backgroundColor: '',
-    extendedProps:{
-        takenBy: '',
-        place: '',
-        endTime: '',
-        startTime: '',
-        date: ''
-    }
-  }
+
   console.log("beginning")
-  $.get("/tSession/2", (res, err)=>{  //change
+  $.get("/tSession/"+query.id, (res, err)=>{ 
       console.log(res);
+      var cont = []
+      for(var x = 0; x < res.length; x++){
+          cont.push({c:true})
+      }
       
-      //for(var x = 0; x < res.length; x++){
-      res.forEach(item=>{
+      
+
+      console.log(cont)
+      res.forEach(function(item, i){
+        var event = {
+          id: '',
+          title: '',
+          start: '',
+          allDay: false,
+          backgroundColor: '',
+          extendedProps:{
+              tutor: '',
+              place: '',
+              endTime: '',
+              startTime: '',
+              date: ''
+          }
+        }
         
-        var cont = true //c for continue
+        var check = false;
+        event.extendedProps.tutor = tutorName
         var sessionId = item.SessionNumb
+        event.id = sessionId
         var className;
         var studentId;
         event.id = sessionId
+        console.log("Doing" + sessionId)
         
         $.get("/cSession/"+sessionId, (res, err)=>{
           className = res[0].ClassIDs
 
           console.log(res.length)
-          if(className != classId){
-              cont = false//c for continue
+          console.log(className + "    " + classId)
+          console.log(cont[i].c)
+          event.title = className
+          if(className == classId){
+            $.get("/sSession/" + sessionId, (res, err)=>{
+              //   if( cont[i].c ){
+                   console.log(res)
+                   if(res.length>0){
+                       studentId = res[0].StudentID
+                       
+                       $.get("/checkStudent/" + studentId, (res, err)=>{
+                         console.log(res)
+                         if(res.check==true){ //change
+                           $.get("/session/" + sessionId, (res, err)=>{
+                             console.log("inside session" + sessionId)
+                   //          if( cont[i].c ){
+                                 console.log(res)
+                                 
+                                 var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
+                                 event.start = date;
+                                 event.extendedProps.place = res[0].PlaceOfTutoring;
+                                 event.extendedProps.endTime = res[0].End_Time;
+                                 event.extendedProps.startTime = res[0].Start_Time;
+                                 event.extendedProps.date = res[0].Day.substr(0, 10);
+                                 // if(check){
+                                 //   event.backgroundColor="green"
+                                 // }else{
+                                 //  event.backgroundColor = "#3a87ad"
+                                 // }
+                                 $.get("/checkStudent/" + studentId, (res, err)=>{
+                                   console.log(res)
+                                   if(res.check){
+                                     event.backgroundColor="green"
+                                   }else{
+                                     event.backgroundColor = "#3a87ad"
+                                   }
+                                   console.log(event);
+                                   $('#calendar').fullCalendar('renderEvent', event, true);
+                         
+                                 })
+                                 // console.log(event);
+                                 // $('#calendar').fullCalendar('renderEvent', event, true);
+                  //           }
+                           });        
+                   
+                         }
+                         // else{
+                         //   cont[i].c  = false
+                         // }
+                       
+                       })
+                   }else if(res.length==0){
+                     $.get("/session/" + sessionId, (res, err)=>{
+                       console.log("inside session" + sessionId)
+               //        if( cont[i].c ){
+                           console.log(res)
+                           
+                           var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
+                           event.start = date;
+                           event.extendedProps.place = res[0].PlaceOfTutoring;
+                           event.extendedProps.endTime = res[0].End_Time;
+                           event.extendedProps.startTime = res[0].Start_Time;
+                           event.extendedProps.date = res[0].Day.substr(0, 10);
+                           // if(check){
+                           //   event.backgroundColor="green"
+                           // }else{
+                           //  event.backgroundColor = "#3a87ad"
+                           // }
+                           $.get("/checkStudent/" + studentId, (res, err)=>{
+                             console.log(res)
+                             if(res.check){
+                               event.backgroundColor="green"
+                             }else{
+                               event.backgroundColor = "#3a87ad"
+                             }
+                             console.log(event);
+                             $('#calendar').fullCalendar('renderEvent', event, true);
+                   
+                           })
+                           // console.log(event);
+                           // $('#calendar').fullCalendar('renderEvent', event, true);
+              //         }
+                     });        
+             
+                   }
+                  
+                   
+              //   }
+             
+             
+             })
           }      
         
         })
         
-        $.get("/sSession/" + sessionId, (res, err)=>{
-            if(cont){
-              console.log(res)
+        // $.get("/sSession/" + sessionId, (res, err)=>{
+        //  //   if( cont[i].c ){
+        //       console.log(res)
+        //       if(res.length>0){
+        //           studentId = res[0].StudentID
+                  
+        //           $.get("/checkStudent/" + studentId, (res, err)=>{
+        //             console.log(res)
+        //             if(res.check==true){ //change
+        //               $.get("/session/" + sessionId, (res, err)=>{
+        //                 console.log("inside session" + sessionId)
+        //       //          if( cont[i].c ){
+        //                     console.log(res)
+                            
+        //                     var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
+        //                     event.start = date;
+        //                     event.extendedProps.place = res[0].PlaceOfTutoring;
+        //                     event.extendedProps.endTime = res[0].End_Time;
+        //                     event.extendedProps.startTime = res[0].Start_Time;
+        //                     event.extendedProps.date = res[0].Day.substr(0, 10);
+        //                     // if(check){
+        //                     //   event.backgroundColor="green"
+        //                     // }else{
+        //                     //  event.backgroundColor = "#3a87ad"
+        //                     // }
+        //                     $.get("/checkStudent/" + studentId, (res, err)=>{
+        //                       console.log(res)
+        //                       if(res.check){
+        //                         event.backgroundColor="green"
+        //                       }else{
+        //                         event.backgroundColor = "#3a87ad"
+        //                       }
+        //                       console.log(event);
+        //                       $('#calendar').fullCalendar('renderEvent', event, true);
+                    
+        //                     })
+        //                     // console.log(event);
+        //                     // $('#calendar').fullCalendar('renderEvent', event, true);
+        //      //           }
+        //               });        
               
-              console.log(studentId)
-              if(res.length >0){
-               studentId = res[0].StudentID
-              }
-              console.log(studentId)
-              if(res.length == 0 || studentId == "1"){ //change
+        //             }
+        //             // else{
+        //             //   cont[i].c  = false
+        //             // }
+                  
+        //           })
+        //       }else if(res.length==0){
+        //         $.get("/session/" + sessionId, (res, err)=>{
+        //           console.log("inside session" + sessionId)
+        //   //        if( cont[i].c ){
+        //               console.log(res)
+                      
+        //               var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
+        //               event.start = date;
+        //               event.extendedProps.place = res[0].PlaceOfTutoring;
+        //               event.extendedProps.endTime = res[0].End_Time;
+        //               event.extendedProps.startTime = res[0].Start_Time;
+        //               event.extendedProps.date = res[0].Day.substr(0, 10);
+        //               // if(check){
+        //               //   event.backgroundColor="green"
+        //               // }else{
+        //               //  event.backgroundColor = "#3a87ad"
+        //               // }
+        //               $.get("/checkStudent/" + studentId, (res, err)=>{
+        //                 console.log(res)
+        //                 if(res.check){
+        //                   event.backgroundColor="green"
+        //                 }else{
+        //                   event.backgroundColor = "#3a87ad"
+        //                 }
+        //                 console.log(event);
+        //                 $('#calendar').fullCalendar('renderEvent', event, true);
+              
+        //               })
+        //               // console.log(event);
+        //               // $('#calendar').fullCalendar('renderEvent', event, true);
+        //  //         }
+        //         });        
+        
+        //       }
+             
+              
+        //  //   }
+        
+        
+        // })
 
-                  console.log(sessionId)
-                  event.id = sessionId
-                  event.title = className
-                  event.extendedProps.tutor = tutorName
-              }else{
-                cont = false
-              }
-            }
-        
-        
-        })
-        $.get("/session/" + sessionId, (res, err)=>{
-          if(cont){
-              console.log(res)
+        // $.get("/checkStudent/" + studentId, (res, err)=>{
+        //   console.log(res)
+        //   if(res.check){
+        //     check = true
+        //   }else{
+        //     check = false
+        //   }
+
+        // })
+
+        // $.get("/session/" + sessionId, (res, err)=>{
+        //   console.log("inside session" + sessionId)
+        //   if( cont[i].c ){
+        //       console.log(res)
               
-              var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
-              event.start = date;
-              event.extendedProps.place = res[0].PlaceOfTutoring;
-              event.extendedProps.endTime = res[0].End_Time;
-              event.extendedProps.startTime = res[0].Start_Time;
-              event.extendedProps.date = res[0].Day.substr(0, 10);
-              if(studentId == "1"){
-                event.backgroundColor="green"
-              }else{
-                event.backgroundColor = "#3a87ad"
-              }
-              console.log(event);
-              $('#calendar').fullCalendar('renderEvent', event, true);
-          }
-        });        
+        //       var date = new Date(res[0].Day.substr(0, 10)+"T"+res[0].Start_Time);
+        //       event.start = date;
+        //       event.extendedProps.place = res[0].PlaceOfTutoring;
+        //       event.extendedProps.endTime = res[0].End_Time;
+        //       event.extendedProps.startTime = res[0].Start_Time;
+        //       event.extendedProps.date = res[0].Day.substr(0, 10);
+        //       // if(check){
+        //       //   event.backgroundColor="green"
+        //       // }else{
+        //       //  event.backgroundColor = "#3a87ad"
+        //       // }
+        //       $.get("/checkStudent/" + studentId, (res, err)=>{
+        //         console.log(res)
+        //         if(res.check){
+        //           event.backgroundColor="green"
+        //         }else{
+        //           event.backgroundColor = "#3a87ad"
+        //         }
+        //         console.log(event);
+        //         $('#calendar').fullCalendar('renderEvent', event, true);
+      
+        //       })
+        //       // console.log(event);
+        //       // $('#calendar').fullCalendar('renderEvent', event, true);
+        //   }
+        // });        
 
       })
+
+      console.log("Doooooooooonnnnnnneeeee")
       
 
   });

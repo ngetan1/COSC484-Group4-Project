@@ -31,7 +31,7 @@ app.use(passport.session());
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
-        sql.query('SELECT Password FROM account WHERE UserID = ?', [username], function (err, results, fields) {
+        sql.query('SELECT UserID, Password,IsTeacher FROM account WHERE UserID = ?', [username], function (err, results, fields) {
             if (err) { done(err) };
 
             if (results.length === 0) {
@@ -39,7 +39,8 @@ passport.use(new LocalStrategy(
             } else{
 
                 if (password.localeCompare(results[0].Password.toString()) === 0) {
-                    return done(null, { user_id: results[0].UserID });
+                    console.log(results)
+                    return done(null, { user_id: results[0].UserID, tutor: results[0].IsTeacher});
                 } else {
                     return done(null, false);
                 }
@@ -63,7 +64,7 @@ app.get("/allAccounts", (req, res) => {
 });
 
 app.get("/account/:id", (req, res)=>{
-    const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account WHERE UserId = ?"
+    const qstring = "SELECT UserId,FName,LName,Email,IsTeacher FROM account WHERE UserId = ?"
 
     sql.query(qstring, [req.params.id], (err, rows, fields) => {
 
@@ -72,7 +73,19 @@ app.get("/account/:id", (req, res)=>{
 
 });
 
+//For create session
+app.get("/tSession", (req, res) => {
+    console.log(req.session.passport.user.user_id)
+    const qstring = "SELECT * FROM teacher_sessions WHERE TeacherId = ?"
+    sql.query(qstring, [req.session.passport.user.user_id], (err, rows, fields) => {
+        res.json(rows);
+    })
+
+});
+
+//for session after search
 app.get("/tSession/:id", (req, res) => {
+    console.log(req.session.passport.user.user_id)
     const qstring = "SELECT * FROM teacher_sessions WHERE TeacherId = ?"
     sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
@@ -128,6 +141,20 @@ app.get("/session/:id", (req, res) => {
 
 });
 
+app.get("/checkStudent/:id", (req, res)=>{
+    if (req.session.passport.user.user_id == req.params.id){
+        res.json({check: true})
+    }else{
+        res.json({check: false})
+    }
+})
+
+app.get("/isTeacher", (req, res)=>{
+    console.log("isTeacher being called")
+    console.log(req.session.passport)
+    res.json({tutor: req.session.passport.user.tutor})
+})
+
 //Getting all session with a specific tutor and class
 app.get("/session/:id", (req, res)=>{
     const qstring = "SELECT * FROM session WHERE SessionId = ?"
@@ -139,7 +166,7 @@ app.get("/session/:id", (req, res)=>{
 
 app.put('/sSession/:id', (req, res)=>{
     var q = "INSERT INTO student_sessions(StudentID,SessionNumber)  VALUES (?,?)  "
-    sql.query(q, [1, req.params.id], (err, rows, fields) => { //change
+    sql.query(q, [req.session.passport.user.user_id, req.params.id], (err, rows, fields) => { //change
         if (!err){
             
             console.log("Inserted student session")
@@ -168,7 +195,7 @@ app.post('/create-session', urlencodedParser, (req, res) => {
         
         if (!err){
             
-            sql.query(q[1], [2,rows.insertId], (err, rows, fields) => { //change
+            sql.query(q[1], [req.session.passport.user.user_id,rows.insertId], (err, rows, fields) => { 
                 if (!err){
                     console.log("Inserted teacher session")
 
@@ -205,7 +232,7 @@ app.post('/update-session/:id', urlencodedParser, (req, res) => {
         
         if (!err){
             
-            sql.query(q[1], [c[0], c[1],  req.params.id], (err, rows, fields) => { //change
+            sql.query(q[1], [c[0], c[1],  req.params.id], (err, rows, fields) => { 
                 if (!err){
                     console.log("Updated class session")
                     res.redirect("/create-session")
@@ -300,7 +327,13 @@ app.get("/session", authenticationMiddleware(), (req, res) => {
 
 
 app.get("/create-session", authenticationMiddleware(), (req, res) => {
-    res.sendFile(__dirname + "/createSession.html");
+    console.log(req.session.passport.user.user_id)
+    if(req.session.passport.user.tutor == 1){
+         res.sendFile(__dirname + "/createSession.html");
+    }else{
+        res.sendFile(__dirname + "/postlogin.html");
+    }
+    
 
 });
 

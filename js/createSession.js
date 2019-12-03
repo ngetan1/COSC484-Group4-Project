@@ -178,24 +178,25 @@ $(function() {
   });
  
   //adding events (later on adding event from database)
-  var event = {
-    id: '',
-    title: '',
-    start: '',
-    allDay: false,
-    backgroundColor: '',
-    extendedProps:{
-        takenBy: '',
-        place: '',
-        endTime: '',
-        startTime: '',
-        date: ''
-    }
-  }
+  
 
-  $.get("/tSession/2", (res, err)=>{  //change
+  $.get("/tSession", (res, err)=>{  
       console.log(res);
       res.forEach(item=>{
+        var event = {
+            id: '',
+            title: '',
+            start: '',
+            allDay: false,
+            backgroundColor: '',
+            extendedProps:{
+                takenBy: '',
+                place: '',
+                endTime: '',
+                startTime: '',
+                date: ''
+            }
+          }
         event.id = item.SessionNumb
         $.get("/session/" + event.id, (res, err)=>{
             console.log(res)
@@ -210,22 +211,35 @@ $(function() {
         $.get("/sSession/" + event.id, (res, err)=>{
             console.log(res)
             if(res.length >0){
-                event.extendedProps.takenBy = res[0].StudentId;
+                
                 event.backgroundColor = "green"
+                $.get("/account/"+res[0].StudentID, (res, err)=>{
+                    console.log(res)
+                    event.extendedProps.takenBy = res[0].FName + " " +res[0].LName;
+                    $.get("/cSession/" + event.id, (res, err)=>{
+                        console.log(res)
+                        event.title = res[0].ClassIDs
+                        $('#calendar').fullCalendar('renderEvent', event, true);
+            
+                    })
+                })
+                    
             }
             else{
                 event.extendedProps.takenBy = "No one";
                 event.backgroundColor = "#3a87ad"
+                $.get("/cSession/" + event.id, (res, err)=>{
+                    console.log(res)
+                    event.title = res[0].ClassIDs
+                    $('#calendar').fullCalendar('renderEvent', event, true);
+        
+                })
             }
+            console.log(event.extendedProps.takenBy)
 
         })
 
-        $.get("/cSession/" + event.id, (res, err)=>{
-            console.log(res)
-            event.title = res[0].ClassIDs
-            $('#calendar').fullCalendar('renderEvent', event, true);
-
-        })
+     
 
 
       })
