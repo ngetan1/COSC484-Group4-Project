@@ -18,14 +18,20 @@ body{
     padding-top: 20px;
     margin: none;
     background-image: linear-gradient(white, rgb(177, 177, 177));
+	text-align: center;
 }
 
 
-tr, th{
+tr, th, p{
     position: relative;
 }
 
 table{
-    position: relative;
+    position: absolute;
     margin-bottom: 200px;
+}
+
+header {
+	font: Georgia;
+	font-size: large;
 }
