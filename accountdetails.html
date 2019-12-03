@@ -3,11 +3,18 @@
 <head>
 <title>TU TutorConnect Account Details </title>
 <meta charset=“utf-8”>
-<link rel = "stylesheet" type = "text/css" href = "/css/accountdetails.css"/>
+<link rel = "stylesheet" type = "text/css" href = "accountdetails.css"/>
+<script src = "js/jquery.min.js"></script>
 </head>
 <body>
-<table> 
 <div id = "account-details">
+<header>Account Details</header>
+
+<p>Account details can be viewed here.</p>
+
+ 
+
+<table>
 	<tr>
 		<th>Towson ID</th> 
 		<th>Email</th>
@@ -15,26 +22,20 @@
 		<th>Last Name</th>
 		<th>Teacher?</th>
 	</tr>
-	<?php
-	$conn = mysqli_connect("us-cdbr-iron-east-05.cleardb.net", "b4179bf089dd31", "45c8f550", "heroku_60e48b8f73ee0e3"); //server name, username, password, database name
-	if ($conn-> connect_error) {
-		die ("Connection failed:". $conn-> connect_error);
-	}
-	
-	$sql = "SELECT UserID, Email, FName, LName, IsTeacher from account";
-	$result = $conn -> query($sql);
-	
-	if ($result -> num_rows > 0) {
-		while ($row = $result-> fetch_assoc()) {
-			echo "<tr><td>". $row["uid"]."</td><td>". $row["email"]."</td><td>". $row["fname"]."</td><td>". $row["lname"]."</td></tr>". $row["isteach"]."</td></tr>";
-		}
-		echo "</table>";
-	} else {
-		echo "0 result";
-	}
-	
-	$conn->close();
-	?>
+	<tr>
+		<script>
+		$.get("/account/"+ query.id, (res, err)=> {
+			console.log(res)
+			
+			document.getElementById("UserID").innerHTML = query.class + " ID";
+			document.getElementById("Email").innerHTML = query.class + " is your email";
+			studentName = res[0].FName + "/t" + res[0].LName;
+			console.log(studentName)
+			console.log(res[0].IsTeacher)
+			
+		})
+		</script>
+	</tr>
 </table>
 </div>
 </body>
