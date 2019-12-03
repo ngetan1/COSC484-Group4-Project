@@ -426,7 +426,7 @@ app.get("/aboutUs", (req, res) => {
 
 });
 app.get("/account", authenticationMiddleware(), (req, res) => {
-    res.sendFile(__dirname + "/accountdetails.php");
+    res.sendFile(__dirname + "/accountdetails.html");
 
 });
 
