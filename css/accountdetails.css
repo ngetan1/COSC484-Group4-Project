@@ -108,6 +108,7 @@ header{
     border-radius:5px;
     display:flex;
     justify-content: space-between;
+    font-style: bold;
 }
 
 #formcontainer input[type=submit]{
@@ -154,8 +155,9 @@ label {
 #head {
 	text-align: center;
 	font-family: Georgia, 'Times New Roman', Times, serif;
-	font-size: 45;
+	font-size: 60;
 	font-weight: 900;
 	top:30%;
     left:30%;
+	color: white;
 }
