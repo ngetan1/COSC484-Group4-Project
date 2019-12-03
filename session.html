@@ -15,10 +15,27 @@
     <script src="js/fullcalendar.min.js"></script>
 
     <script src='js/session.js'></script>
+    <link rel="stylesheet" href="css/header.css">
 
     
   </head>
   <body>
+      <header>
+          <div class="container">
+          <nav>
+          <a href="/"><img id="logo" src='img/logo.png' /></a>
+              <div id ="top">
+                <ul id="ul_top">  
+                 <li><a href="/create-session">Create Session</a></li>
+                 <li><a href="/search">Search</a></li>
+                 <li><a href="/logout">Logout</a></li>
+                 <li><a href="/account">Account</a></li>
+                 <li><a href="/aboutUs">About Us</a></li>
+                </ul>
+                  </div>
+                </nav>
+          </div>
+       </header>
     <h1 id='className'>Class Session</h1>
     <h2 id='tutorName'>Tutor:</h2>
     <div id='calendar'></div>
@@ -28,12 +45,12 @@
         <div class="modal-content">
               
           <div class="closeContainer">
-            <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+            <span onclick="document.getElementById('event-details').style.display='none'" class="close" title="Close PopUp">&times;</span>
             
             <h1 style="text-align:center" id="Event Title" ></h1>
           </div>
       
-          <div class="container">
+          <div class="show">
             
             <p id="showDate"></p>
             <p id="showStartTime"></p>

@@ -1,0 +1,44 @@
+header {
+    background-color: 
+    white;
+}
+.container {
+    width: 100%;
+    margin: 0 auto;
+}
+nav {
+    top: 0;
+    right: 0;
+}
+
+a {
+    text-decoration: none;
+    color: 
+    black;
+}
+
+#logo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 60px;
+    padding-bottom: 50px;
+}
+
+#top {
+    text-align: right;
+    font-weight: bold;
+    padding: 15px;
+}
+
+#ul_top li {
+    display: inline;
+    list-style-type: none;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+}
+
+nav li {
+    margin-left: 60px;
+    height: 100px;
+}

@@ -28,21 +28,24 @@ app.use(passport.session());
 passport.use(new LocalStrategy(
     function(username, password, done){
         console.log('hello');
-        sql.query('SELECT UserId, password FROM users WHERE username = ?', [username], function(err, results, fields){
-            if(err) {done(err)};
+        console.log(username)
+        console.log(password)
+        return done(null, "hhhhh");
+        // sql.query('SELECT UserId, password FROM users WHERE username = ?', [username], function(err, results, fields){
+        //     if(err) {done(err)};
 
-            if(results.length === 0){
-                done(null, false);
-            }
+        //     if(results.length === 0){
+        //         done(null, false);
+        //     }
 
-            password.localeCompare(results[0].password.toString(), function(err, response){
-                if(response === true){
-                    return done(null, {user_id: results[0].id});
-                } else{
-                    return done(null, false);
-                }
-            });            
-        });
+        //     password.localeCompare(results[0].password.toString(), function(err, response){
+        //         if(response === true){
+        //             return done(null, {user_id: results[0].id});
+        //         } else{
+        //             return done(null, false);
+        //         }
+        //     });            
+        // });
     }
 ));
 
@@ -264,23 +267,7 @@ app.delete('/session/:id',urlencodedParser, (req, res) => {
     })
 
 
-    // $.get("http://localhost:3000/sSession/" + req.params.id, (res, err)=>{
-    //     if(!err){
-    //         console.log(res.length);
-    //         if(res.length > 0){
-    //             $.delete("http://localhost:3000/sSession/" + req.params.id, (res, err)=>{
-    //                 if(err){
-    //                     console.log(err)
-    //                 }
-    //                 else{
-    //                     console.log("Deleted student session")
-    //                 }
-    //             })
-    //         }
-    //     }else{
-    //         console.log(err);
-    //     }
-    // });
+
 
     sql.query('DELETE FROM session WHERE SessionId = ?', [req.params.id], (err, rows, fields) => {
         console.log("deleting session")
@@ -322,8 +309,12 @@ app.get("/login", (req, res)=>{
 });
 
 app.post("/login", passport.authenticate('local', { 
-    successRedirect: "/search",
-    failureRedirect: "/login"
+    successRedirect: function(){
+        console.log("success")
+    },
+    failureRedirect: function(){
+        console.log("failure")
+    }
 }));
 
 app.get("/search", authenticationMiddleware(), (req, res)=>{

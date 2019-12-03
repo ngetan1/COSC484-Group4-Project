@@ -18,6 +18,11 @@ console.log(location.search);
       tutorName = res[0].Fname + " " + res[0].Lname;
       console.log(tutorName)
       document.getElementById("tutorName").innerHTML= "Tutor: "+tutorName;
+      console.log(res[0].IsTeacher)
+      if(res[0].IsTeacher == "1"){
+        console.log("visible")
+        document.getElementById("createSession").style.visibility="visible"
+      }
     
   })
   
