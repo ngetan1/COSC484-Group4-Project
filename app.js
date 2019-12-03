@@ -131,6 +131,17 @@ app.get("/classSession/:id", (req, res)=>{
 
 });
 
+app.get("/searchSession/:id", (req, res)=>{
+    const qstring = "SELECT DISTINCT UserId,FName,LName FROM account \
+    INNER JOIN teacher_sessions ON account.UserID = teacher_sessions.TeacherID \
+    INNER JOIN session ON teacher_sessions.SessionNumb = session.SessionId \
+    INNER JOIN class_sessions ON class_sessions.SessionNum = session.SessionId AND class_sessions.ClassIDs = ?"
+    
+    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+        res.json(rows);
+    }) 
+
+});
 
 
 app.get("/cSession/:id", (req, res) => {
