@@ -3,10 +3,25 @@
 <head>
 <title>TU TutorConnect Account Details </title>
 <meta charset=“utf-8”>
-<link rel = "stylesheet" type = "text/css" href = "accountdetails.css"/>
+<link rel = "stylesheet" type = "text/css" href = "/css/accountdetails.css"/>
 <script src = "js/jquery.min.js"></script>
+<link rel="stylesheet" href="css/header.css">
 </head>
 <body>
+		
+		<header>
+				<a href="/search"><img id="logo" src='img/logo.png' /></a>
+				<nav>
+				  <div id = "top">
+				   <ul id="ul_top">
+					 <li id = "createSession" style="visibility: hidden;"><a href="/create-session">Create Session</a></li>
+					 <li><a href="/search">Search</a></li>
+					 <li><a href="/logout">Log Out</a></li>
+					 
+				   </ul>
+				  </div>
+				</nav>
+			   </header>
 <div id = "account-details">
 <header>Account Details</header>
 
@@ -16,22 +31,34 @@
 
 <table>
 	<tr>
-		<th>Towson ID</th> 
-		<th>Email</th>
-		<th>First Name</th>
-		<th>Last Name</th>
-		<th>Teacher?</th>
+		<tr id="UserID"></tr> 
+		<tr id="Fname"></tr>
+		<tr id="Lname"></tr>
+		<tr id="Email"></tr>
+		<tr id="Teacher"></tr>
 	</tr>
 	<tr>
 		<script>
-		$.get("/account/"+ query.id, (res, err)=> {
+			$.get("/isTeacher", (res, err)=>{
+				if(res.tutor == 1){
+					document.getElementById("createSession").style.visibility="visible"
+				}
+			})
+			$.get("/getAccount/", (res, err)=> {
 			console.log(res)
 			
-			document.getElementById("UserID").innerHTML = query.class + " ID";
-			document.getElementById("Email").innerHTML = query.class + " is your email";
-			studentName = res[0].FName + "/t" + res[0].LName;
-			console.log(studentName)
-			console.log(res[0].IsTeacher)
+			document.getElementById("UserID").innerHTML = "User ID: "+res[0].UserId;
+			
+			document.getElementById("Fname").innerHTML = "First Name: " + res[0].FName 
+			document.getElementById("Lname").innerHTML = "Last Name: " + res[0].LName 
+			document.getElementById("Email").innerHTML = "Email: "+res[0].Email;
+			if( res[0].IsTeacher == "1"){
+				document.getElementById("Teacher").innerHTML = "Tutor: Yes";
+			}else{
+				document.getElementById("Teacher").innerHTML = "Tutor: No"
+			}
+			
+			
 			
 		})
 		</script>

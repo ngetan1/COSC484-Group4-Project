@@ -73,6 +73,16 @@ app.get("/account/:id", (req, res)=>{
 
 });
 
+
+app.get("/getAccount/", (req, res)=>{
+    const qstring = "SELECT UserId,FName,LName,Email,IsTeacher FROM account WHERE UserId = ?"
+
+    sql.query(qstring, [req.session.passport.user.user_id], (err, rows, fields) => {
+
+        res.json(rows);
+    })
+
+});
 //For create session
 app.get("/tSession", (req, res) => {
     console.log(req.session.passport.user.user_id)
