@@ -49,7 +49,7 @@ a{
 }
 
 body{
-    background-image: url("burdick.jpg");
+    background-image: url("../img/burdick.jpg");
     background-attachment: fixed;
     padding: 0;
     background: blur;
