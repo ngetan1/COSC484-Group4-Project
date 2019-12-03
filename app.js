@@ -2,6 +2,7 @@ var express = require("express");
 var app = express();
 var sql = require("./js/db.js");
 var bodyParser = require('body-parser')
+var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
 var MySQLStore = require('express-mysql-session')(session);
@@ -15,6 +16,9 @@ var sessionStore = new MySQLStore(sql);
 app.use("/css", express.static("./css"));
 app.use("/js", express.static("./js"));
 app.use("/img", express.static("./img"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(session({
     secret: "al1896yb143m5v1k145ganqmw189b123b",
     resave: false,
@@ -26,26 +30,21 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 passport.use(new LocalStrategy(
-    function(username, password, done){
-        console.log('hello');
-        console.log(username)
-        console.log(password)
-        return done(null, "hhhhh");
-        // sql.query('SELECT UserId, password FROM users WHERE username = ?', [username], function(err, results, fields){
-        //     if(err) {done(err)};
+    function (username, password, done) {
+        sql.query('SELECT Password FROM account WHERE UserID = ?', [username], function (err, results, fields) {
+            if (err) { done(err) };
 
-        //     if(results.length === 0){
-        //         done(null, false);
-        //     }
+            if (results.length === 0) {
+                done(null, false);
+            } else{
 
-        //     password.localeCompare(results[0].password.toString(), function(err, response){
-        //         if(response === true){
-        //             return done(null, {user_id: results[0].id});
-        //         } else{
-        //             return done(null, false);
-        //         }
-        //     });            
-        // });
+                if (password.localeCompare(results[0].Password.toString()) === 0) {
+                    return done(null, { user_id: results[0].UserID });
+                } else {
+                    return done(null, false);
+                }
+            }
+        });
     }
 ));
 
@@ -53,50 +52,49 @@ passport.use(new LocalStrategy(
 //---------------------------------------------------------------------------------------
 
 
-app.get("/allAccounts", (req, res)=>{
+app.get("/allAccounts", (req, res) => {
     const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account"
-    sql.query(qstring, (err, rows, fields) =>{
+    sql.query(qstring, (err, rows, fields) => {
         console.log(rows);
         res.json(rows);
     })
-    
+
 
 });
 
 app.get("/account/:id", (req, res)=>{
     const qstring = "SELECT UserId,Fname,Lname,Email,IsTeacher FROM account WHERE UserId = ?"
-    
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
-        
+
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
+
         res.json(rows);
-    }) 
+    })
 
 });
 
-//Getting all session of a specific tutor created
-app.get("/tSession/:id", (req, res)=>{
+app.get("/tSession/:id", (req, res) => {
     const qstring = "SELECT * FROM teacher_sessions WHERE TeacherId = ?"
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
-    }) 
+    })
 
 });
 
-//Getting all session that a student registered
-app.get("/studentSession/:id", (req, res)=>{
+//Getting all session using student id
+app.get("/studentSession/:id", (req, res) => {
     const qstring = "SELECT * FROM student_sessions WHERE StudentId = ?"
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
-    }) 
+    })
 
 });
 
 //Getting all session using session id
-app.get("/sSession/:id", (req, res)=>{
+app.get("/sSession/:id", (req, res) => {
     const qstring = "SELECT * FROM student_sessions WHERE SessionNumber = ?"
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
-    }) 
+    })
 
 });
 
@@ -111,21 +109,22 @@ app.get("/classSession/:id", (req, res)=>{
 });
 
 
-app.get("/cSession/:id", (req, res)=>{
+
+app.get("/cSession/:id", (req, res) => {
     const qstring = "SELECT * FROM class_sessions WHERE SessionNum = ?"
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
-    }) 
+    })
 
 });
 
 
 
-app.get("/session/:id", (req, res)=>{
+app.get("/session/:id", (req, res) => {
     const qstring = "SELECT * FROM session WHERE SessionId = ?"
-    sql.query(qstring, [req.params.id],(err, rows, fields) =>{
+    sql.query(qstring, [req.params.id], (err, rows, fields) => {
         res.json(rows);
-    }) 
+    })
 
 });
 
@@ -172,50 +171,51 @@ app.post('/create-session', urlencodedParser, (req, res) => {
             sql.query(q[1], [2,rows.insertId], (err, rows, fields) => { //change
                 if (!err){
                     console.log("Inserted teacher session")
-                    
-                }else
+
+                } else
                     console.log(err);
             })
 
-            sql.query(q[2], [rows.insertId, c[0], c[1]], (err, rows, fields) => { //change
-                if (!err){
+            sql.query(q[2], [rows.insertId, c[0], c[1]], (err, rows, fields) => {
+                if (!err) {
                     console.log("Inserted class session")
                     res.redirect("/create-session")
-                }else
+                } else
                     console.log(err);
             })
-            
-        }else
+
+        } else
             console.log(err);
-    })    
+    })
 });
 
 
 app.post('/update-session/:id', urlencodedParser, (req, res) => {
-    
-    var elm=req.body;
-    
+
+    var elm = req.body;
+    var c = elm.class.split("  ")
+
     // var q = "SET @Day = ?;SET @Start_Time = ?;SET @End_Time = ?;SET @PlaceOfTutoring = ?; \
     // CALL session(@Day,@Start_Time,@End_Time,@PlaceOfTutoring);";
     var q = ["UPDATE session SET Day=?, Start_Time=?, End_Time=?, PlaceOfTutoring=?  WHERE SessionId=?;",
-    "UPDATE class_sessions SET ClassIDs=?, ClassNames=?  WHERE SessionNum=?;"]
-    
-    
+        "UPDATE class_sessions SET ClassIDs=?, ClassNames=?  WHERE SessionNum=?;"]
+
+
     sql.query(q[0], [elm.day, elm.sTime, elm.eTime, elm.place, req.params.id], (err, rows, fields) => {
         
         if (!err){
             
-            sql.query(q[1], ["COSC 484", "Web-Based Program",  req.params.id], (err, rows, fields) => { //change
+            sql.query(q[1], [c[0], c[1],  req.params.id], (err, rows, fields) => { //change
                 if (!err){
                     console.log("Updated class session")
                     res.redirect("/create-session")
-                }else
+                } else
                     console.log(err);
             })
-            
-        }else
+
+        } else
             console.log(err);
-    })    
+    })
 });
 
 
@@ -229,7 +229,7 @@ app.delete('/sSession/:id', (req, res) => {
             console.log(err);
     })
 
-    
+
 });
 
 //deleting a session using student id
@@ -241,10 +241,10 @@ app.delete('/studentSession/:id', (req, res) => {
             console.log(err);
     })
 
-    
+
 });
 
-app.delete('/session/:id',urlencodedParser, (req, res) => {
+app.delete('/session/:id', urlencodedParser, (req, res) => {
     sql.query('DELETE FROM teacher_sessions WHERE SessionNumb = ?', [req.params.id], (err, rows, fields) => {
         if (!err)
             console.log("Deleted teacher session")
@@ -271,7 +271,7 @@ app.delete('/session/:id',urlencodedParser, (req, res) => {
 
     sql.query('DELETE FROM session WHERE SessionId = ?', [req.params.id], (err, rows, fields) => {
         console.log("deleting session")
-        if (!err){
+        if (!err) {
             console.log('Deleted session.');
             res.status(200).end();
         }
@@ -286,40 +286,48 @@ app.delete('/session/:id',urlencodedParser, (req, res) => {
 //------------------------------------------------------------------------------------------------
 
 
-app.get("/", (req, res)=>{
-    
-    res.sendFile(__dirname+"/main.html");
+app.get("/", (req, res) => {
+
+    res.sendFile(__dirname + "/main.html");
 
 });
 
-app.get("/session", (req, res)=>{
-    
-    res.sendFile(__dirname+"/session.html");
+app.get("/session", authenticationMiddleware(), (req, res) => {
+
+    res.sendFile(__dirname + "/session.html");
 
 });
 
 
-app.get("/create-session", (req, res)=>{
-    res.sendFile(__dirname+"/createSession.html");
-
-});
-app.get("/login", (req, res)=>{
-    res.sendFile(__dirname+"/login.html");
+app.get("/create-session", authenticationMiddleware(), (req, res) => {
+    res.sendFile(__dirname + "/createSession.html");
 
 });
 
-app.post("/login", passport.authenticate('local', { 
-    successRedirect: function(){
-        console.log("success")
-    },
-    failureRedirect: function(){
-        console.log("failure")
-    }
+app.get("/login", (req, res) => {
+    res.sendFile(__dirname + "/login.html");
+
+});
+
+app.post("/login", passport.authenticate('local', {
+    successRedirect: "/search",
+    failureRedirect: "/login"
 }));
 
-app.get("/search", authenticationMiddleware(), (req, res)=>{
-    res.sendFile(__dirname+"/postlogin.html");
+app.get("/logout", (req, res) => {
+    req.logout();
+    req.session.destroy();
+    res.sendFile(__dirname + "/main.html");
 
+});
+
+app.get("/search", authenticationMiddleware(), (req, res) => {
+    res.sendFile(__dirname + "/postlogin.html");
+
+});
+
+app.get("/re_create_account", (req, res) => {
+    res.sendFile(__dirname + "/re_create_account.html");
 });
 
 app.get("/createAccount", (req, res)=>{
@@ -327,8 +335,11 @@ app.get("/createAccount", (req, res)=>{
     
 });
 
+app.get("/re_create_account", (req, res)=>{
+    res.sendFile(__dirname+"/re_create_account.html");
+    
+});
 app.get("/createAccountRedirect", (req, res)=>{
-    res.sendFile(__dirname+"/postlogin.html");
     
     var fname= req.query.fname;
     var lname = req.query.lname;
@@ -336,57 +347,69 @@ app.get("/createAccountRedirect", (req, res)=>{
     var email = req.query.email;
     var pw = req.query.pw;
     var isteach = req.query.isteach;
-    if(isteach == "Yes"){
+    if (isteach == "Yes") {
         isteach = 1;
     }
-    else{
+    else {
         isteach = 0;
     }
         
-    var sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+    var sqlString = "SELECT UserID FROM account WHERE UserID = ?";
     var values = [
         [uid, pw, fname, lname, email, isteach]
     ];
-
-    sql.query(sqlString, [values], function(err, result){
+    
+    sql.query(sqlString, uid, (err, result) => {
         if (err) throw err;
-        console.log('account added');
+        if(result == ''){
+            sqlString = "INSERT INTO account (UserID, password, FName, LName, Email, IsTeacher) VALUES ?";
+            sql.query(sqlString, [values], (error, results) => {
+                if (error) throw error;
+                console.log("Account added");
+            });
+            // SELECT LAST_INSERT_ID() could probably replace the line directly below //
+            res.sendFile(__dirname+"/login.html");
+            /*
+            sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
+                if(error) throw error;
+        
+                const user_id = results[0];
+        
+                req.login(user_id, function(err) {
+                    res.redirect('/search');
+                });
+        
+            });
+            */
+        }
+        if(result != ''){
+            res.redirect("/re_create_account");
+        }
     });
-
-    sql.query('SELECT LAST_INSERT_ID() as user_id', function(error, results, fields) {
-        if(error) throw error;
-
-        const user_id = results[0]
-
-        req.login(user_id, function(err) {
-            res.redirect('/search');
-        });
-
-    });
 });
 
-app.get("/aboutUs", (req, res)=>{
-    res.sendFile(__dirname+"/aboutus.html");
+app.get("/aboutUs", (req, res) => {
+    res.sendFile(__dirname + "/aboutus.html");
 
 });
-app.get("/account", (req, res)=>{
-    res.sendFile(__dirname+"/accountdetails.html");
+app.get("/account", authenticationMiddleware(), (req, res) => {
+    res.sendFile(__dirname + "/accountdetails.php");
 
 });
 
-passport.serializeUser(function(user_id, done){
+passport.serializeUser(function (user_id, done) {
     done(null, user_id);
 });
 
-passport.deserializeUser(function(user_id, done){
+passport.deserializeUser(function (user_id, done) {
     done(null, user_id);
 });
 
-function authenticationMiddleware(){
-    return(req, res, next) => {
+function authenticationMiddleware() {
+    return (req, res, next) => {
         console.log('req.session.passport.user: ${JSON.stringify(req.session.passport)}');
 
-        if(req.isAuthenticated()) return next();
+        if (req.isAuthenticated()) return next();
 
         res.redirect('/login');
     }

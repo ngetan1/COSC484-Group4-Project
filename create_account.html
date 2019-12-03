@@ -3,20 +3,24 @@
     <head>
         <title>Create Account</title>
         <meta charset="UTF-8">
-        <link rel = "stylesheet" href = "css/create-account.css"/>
+       
         <script>
             function validate_password(){
                 var pw = document.forms["account_info"]["pw"].value;
                 var cpw = document.forms["account_info"]["cpw"].value;
+                var valid = false;
 
                 if(pw != cpw){
                     window.alert("Passwords do not match.");
-                    return false;
                 }
-                else{ return true; }
+                else{ 
+                    valid = true;
+                }
+                
+                return valid;
             }
         </script>
-        <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="css/login.css">
     </head>
     <body>
             <header>
@@ -34,36 +38,38 @@
                  </header>
         <div id="create-account">
             <img src="img/logo.png" id="logo"/>
-            <h3>
-                <u><b>Welcome to TU Tutor Connect</b></u>
-            </h3>
-            <p>Please create an account so that you can get started on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p>
+          
+           
             
-            <form name="account_info" method="GET" action="/createAccountRedirect" onsubmit="return validate_password()">
+            <form id = "formcontainer" name="account_info" method="GET" action="/createAccountRedirect" onsubmit="return validate_password()">
+                <h1>
+                        <u><b>Welcome to TU Tutor Connect</b></u>
+                    </h1>
+                    <p>Please create an account so that you can get started on your way to finding a tutor <u><b>or</b></u> becoming a tutor yourself!</p><br/><br/>
                 <table>
                     <tr>
                         <td>Towson ID</td>
-                        <td><input type="text" name="uid" required></td>
+                        <td><input class = "info" type="text" name="uid" required></td>
                     </tr>
                     <tr>
                         <td>First Name</td>
-                        <td><input type="text" name="fname" required></td>
+                        <td><input class = "info" type="text" name="fname" required></td>
                     </tr>
                     <tr>
                         <td>Last Name</td>
-                        <td><input type="text" name="lname" required></td>
+                        <td><input class = "info" type="text" name="lname" required></td>
                     </tr>
                     <tr>
                         <td>E-mail</td>
-                        <td><input type="email" name="email" required></td>
+                        <td><input class = "info" type="email" name="email" required></td>
                     </tr>
                     <tr>
                         <td>Password</td>
-                        <td><input type="text" name="pw" required></td>
+                        <td><input class = "info" type="password" name="pw" required></td>
                     </tr>
                     <tr>
                         <td>Confirm Password</td>
-                        <td><input type="text" name="cpw" required></td>
+                        <td><input class = "info" type="password" name="cpw" required></td>
                     </tr>
                     <tr>
                         <td>Are you a Teacher?</td>
@@ -78,12 +84,12 @@
                 </table>
                 <br>
                 
-                <input type="submit" value="Create Account" id="submit">
-                
+                <input type="submit" value="Create Account" id="submit"><br/>
+                <p>
+                        Already have an account? <a href="/login">Login Here</a>
+                    </p>
             </form>
-            <p>
-                Already have an account? <a href="/login">Login Here</a>
-            </p>
+            
             
         </div>
     </body>

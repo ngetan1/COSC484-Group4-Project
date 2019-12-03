@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset = 'urf-8'>
-        <link rel = "stylesheet" href = "css/login.css"/>
+        
         <!-- <script language="javascript">
             function check(){
                 var x = document.forms["loginForm"]["username"].value;
@@ -17,7 +17,7 @@
             }
         </script> -->
         <!-- onsubmit="return check()" -->
-        <link rel="stylesheet" href="css/header.css">
+        <link rel="stylesheet" href="css/login.css">
     </head>
     <body>
             <header>
@@ -33,20 +33,22 @@
                           </nav>
                     </div>
                  </header>
-        <div id = "login">
-           <img src = "img/logo.png" id = "logo"/>
+     
            
-            <form method="POST" action="/login">
-                <h3>Sign In</h3>
-                <label class = "info" >Username:</label>
+            <form id = "formcontainer" method="POST" action="/login">
+                <h1>Log In</h1>
+                <h3>Username:</h3>
                 <input type = "text" name="username" class = "info" required><br>
-                <label class = "info" >Password:</label>
+                <h3>Password:</h3>
                 <input type = "password" name="password" class = "info" required><br>
-                <input type="submit" value="Submit" id="submit">
+                <input type="submit" value="Submit" id="submit"><br/>
+               
+                <p>
+                        Do not have an account?<a href = "/createAccount">Register Here</a>
+                    </p>
             </form>
-            <label class = "newAcc">Do not have an account?</label>
-            <a href = "/createAccount">Register Here</a>
             
-        </div>
+            
+        
     </body>
 </html>
